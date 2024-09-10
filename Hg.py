@@ -5,6 +5,7 @@ import string
 import threading
 import sys
 import select
+from datetime import datetime
 
 # Constants
 DISCORD_API_URL = 'https://discord.com/api/v10'
@@ -19,6 +20,9 @@ def generate_nitro_code():
 
 def generate_proxy():
     return f"http://{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}:{random.randint(1024, 65535)}"
+
+def generate_nitro_gift_link():
+    return f"https://discord.gift/{generate_nitro_code()}"
 
 # Validate tokens
 def validate_token(token):
@@ -53,9 +57,9 @@ def validate_proxy(proxy):
 # Display results
 def display_results(valid, invalid, label):
     if not valid and not invalid:
-        print(f"No {label} found")
+        print(f"\nNo {label} found")
         return
-    print(f"Valid {label}: {len(valid)}")
+    print(f"\nValid {label}: {len(valid)}")
     for item in valid:
         print(f"  {item}")
     print(f"Invalid {label}: {len(invalid)}")
@@ -68,7 +72,7 @@ def non_blocking_input(prompt):
     while True:
         if select.select([sys.stdin], [], [], 0.0)[0]:
             return sys.stdin.readline().strip()
-        asyncio.run(asyncio.sleep(0.1))
+        asyncio.run(asyncio.sleep(0.01))
 
 # Asynchronous token generation and validation
 async def generate_tokens():
@@ -76,7 +80,7 @@ async def generate_tokens():
     invalid_tokens = []
 
     print("Generating and validating tokens. Press [ENTER] to stop...")
-    
+
     stop_event = threading.Event()
 
     def stop_generating():
@@ -88,14 +92,14 @@ async def generate_tokens():
 
     while not stop_event.is_set():
         token = generate_token()
-        print(f"Generated Token: {token}")
+        print(f"\033[92mGenerated Token:\033[0m {token}")
         if validate_token(token):
             valid_tokens.append(token)
-            print(f"Valid Token: {token}")
+            print(f"\033[92mValid Token:\033[0m {token}")
         else:
             invalid_tokens.append(token)
-            print(f"Invalid Token: {token}")
-        await asyncio.sleep(0.2)
+            print(f"\033[91mInvalid Token:\033[0m {token}")
+        await asyncio.sleep(0.01)
 
     display_results(valid_tokens, invalid_tokens, "Tokens")
 
@@ -105,7 +109,7 @@ async def generate_nitro_codes():
     invalid_nitro = []
 
     print("Generating and validating Nitro codes. Press [ENTER] to stop...")
-    
+
     stop_event = threading.Event()
 
     def stop_generating():
@@ -117,14 +121,15 @@ async def generate_nitro_codes():
 
     while not stop_event.is_set():
         nitro_code = generate_nitro_code()
-        print(f"Generated Nitro Code: {nitro_code}")
+        nitro_link = generate_nitro_gift_link()
+        print(f"\033[92mGenerated Nitro Link:\033[0m {nitro_link}")
         if validate_nitro_code(nitro_code):
-            valid_nitro.append(nitro_code)
-            print(f"Valid Nitro Code: {nitro_code}")
+            valid_nitro.append(nitro_link)
+            print(f"\033[92mValid Nitro Link:\033[0m {nitro_link}")
         else:
-            invalid_nitro.append(nitro_code)
-            print(f"Invalid Nitro Code: {nitro_code}")
-        await asyncio.sleep(0.2)
+            invalid_nitro.append(nitro_link)
+            print(f"\033[91mInvalid Nitro Link:\033[0m {nitro_link}")
+        await asyncio.sleep(0.01)
 
     display_results(valid_nitro, invalid_nitro, "Nitro Codes")
 
@@ -134,7 +139,7 @@ async def generate_proxies():
     invalid_proxies = []
 
     print("Generating and validating proxies. Press [ENTER] to stop...")
-    
+
     stop_event = threading.Event()
 
     def stop_generating():
@@ -146,25 +151,28 @@ async def generate_proxies():
 
     while not stop_event.is_set():
         proxy = generate_proxy()
-        print(f"Generated Proxy: {proxy}")
+        print(f"\033[92mGenerated Proxy:\033[0m {proxy}")
         if validate_proxy(proxy):
             valid_proxies.append(proxy)
-            print(f"Valid Proxy: {proxy}")
+            print(f"\033[92mValid Proxy:\033[0m {proxy}")
         else:
             invalid_proxies.append(proxy)
-            print(f"Invalid Proxy: {proxy}")
-        await asyncio.sleep(0.2)
+            print(f"\033[91mInvalid Proxy:\033[0m {proxy}")
+        await asyncio.sleep(0.01)
 
     display_results(valid_proxies, invalid_proxies, "Proxies")
 
-# Show menu
+# Show menu with improved design
 async def show_menu():
-    print("\nDiscord Tool - Main Menu")
-    print("1. Token Generator & Checker")
-    print("2. Nitro Code Generator & Checker")
-    print("3. Proxy Generator & Checker")
-    print("4. Exit")
-    choice = input("Select an option: ")
+    print("\n\033[96m===============================\033[0m")
+    print("\033[96m   Discord Tool - Main Menu   \033[0m")
+    print("\033[96m===============================\033[0m")
+    print("\033[93m1.\033[0m Token Generator & Checker")
+    print("\033[93m2.\033[0m Nitro Code Generator & Checker")
+    print("\033[93m3.\033[0m Proxy Generator & Checker")
+    print("\033[93m4.\033[0m Exit")
+    print("\033[96m===============================\033[0m")
+    choice = input("\033[92mSelect an option: \033[0m")
     return choice
 
 # Main function
@@ -178,11 +186,11 @@ async def main():
         elif choice == '3':
             await generate_proxies()
         elif choice == '4':
-            print("Exiting...")
+            print("\033[92mExiting...\033[0m")
             break
         else:
-            print("Invalid option. Please select again.")
-        input("Press [ENTER] to continue...")
+            print("\033[91mInvalid option. Please select again.\033[0m")
+        input("\033[92mPress [ENTER] to continue...\033[0m")
 
 if __name__ == '__main__':
     asyncio.run(main())
