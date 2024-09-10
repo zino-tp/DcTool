@@ -2,6 +2,9 @@ import asyncio
 import requests
 import random
 import string
+import threading
+import sys
+import select
 
 # Constants
 DISCORD_API_URL = 'https://discord.com/api/v10'
@@ -59,12 +62,31 @@ def display_results(valid, invalid, label):
     for item in invalid:
         print(f"  {item}")
 
+# Non-blocking input detection
+def non_blocking_input(prompt):
+    print(prompt, end='', flush=True)
+    while True:
+        if select.select([sys.stdin], [], [], 0.0)[0]:
+            return sys.stdin.readline().strip()
+        await asyncio.sleep(0.1)
+
 # Asynchronous token generation and validation
 async def generate_tokens():
     valid_tokens = []
     invalid_tokens = []
+
     print("Generating and validating tokens. Press [ENTER] to stop...")
-    while True:
+    
+    stop_event = threading.Event()
+
+    def stop_generating():
+        nonlocal stop_event
+        input("Press [ENTER] to stop...")
+        stop_event.set()
+
+    threading.Thread(target=stop_generating).start()
+
+    while not stop_event.is_set():
         token = generate_token()
         print(f"Generated Token: {token}")
         if validate_token(token):
@@ -74,16 +96,26 @@ async def generate_tokens():
             invalid_tokens.append(token)
             print(f"Invalid Token: {token}")
         await asyncio.sleep(0.2)
-        if input() == "":
-            break
+
     display_results(valid_tokens, invalid_tokens, "Tokens")
 
 # Asynchronous Nitro code generation and validation
 async def generate_nitro_codes():
     valid_nitro = []
     invalid_nitro = []
+
     print("Generating and validating Nitro codes. Press [ENTER] to stop...")
-    while True:
+    
+    stop_event = threading.Event()
+
+    def stop_generating():
+        nonlocal stop_event
+        input("Press [ENTER] to stop...")
+        stop_event.set()
+
+    threading.Thread(target=stop_generating).start()
+
+    while not stop_event.is_set():
         nitro_code = generate_nitro_code()
         print(f"Generated Nitro Code: {nitro_code}")
         if validate_nitro_code(nitro_code):
@@ -93,16 +125,26 @@ async def generate_nitro_codes():
             invalid_nitro.append(nitro_code)
             print(f"Invalid Nitro Code: {nitro_code}")
         await asyncio.sleep(0.2)
-        if input() == "":
-            break
+
     display_results(valid_nitro, invalid_nitro, "Nitro Codes")
 
 # Asynchronous Proxy generation and validation
 async def generate_proxies():
     valid_proxies = []
     invalid_proxies = []
+
     print("Generating and validating proxies. Press [ENTER] to stop...")
-    while True:
+    
+    stop_event = threading.Event()
+
+    def stop_generating():
+        nonlocal stop_event
+        input("Press [ENTER] to stop...")
+        stop_event.set()
+
+    threading.Thread(target=stop_generating).start()
+
+    while not stop_event.is_set():
         proxy = generate_proxy()
         print(f"Generated Proxy: {proxy}")
         if validate_proxy(proxy):
@@ -112,8 +154,7 @@ async def generate_proxies():
             invalid_proxies.append(proxy)
             print(f"Invalid Proxy: {proxy}")
         await asyncio.sleep(0.2)
-        if input() == "":
-            break
+
     display_results(valid_proxies, invalid_proxies, "Proxies")
 
 # Show menu
