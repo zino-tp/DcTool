@@ -77,12 +77,12 @@ async def generate_and_check_nitro_codes(session, count):
 
 async def display_results(valid_items, invalid_items, valid_label, invalid_label):
     os.system('cls' if os.name == 'nt' else 'clear')
-    Write.Print(Box.DoubleLine(f"\n{valid_label}\n" + "\n".join(valid_items) if valid_items else "No valid items found.", width=50), Colors.green_to_cyan, interval=0.000)
-    Write.Print(Box.DoubleLine(f"\n{invalid_label}\n" + "\n".join(invalid_items) if invalid_items else "No invalid items found.", width=50), Colors.red_to_yellow, interval=0.000)
+    Write.Print(Box.DoubleCube(f"\n{valid_label}\n" + "\n".join(valid_items) if valid_items else "No valid items found.", width=50), Colors.green_to_cyan, interval=0.000)
+    Write.Print(Box.DoubleCube(f"\n{invalid_label}\n" + "\n".join(invalid_items) if invalid_items else "No invalid items found.", width=50), Colors.red_to_yellow, interval=0.000)
 
 async def menu():
     os.system('cls' if os.name == 'nt' else 'clear')
-    Write.Print(Box.DoubleLine("Discord Tool - Main Menu", width=50), Colors.green_to_cyan, interval=0.000)
+    Write.Print(Box.DoubleCube("Discord Tool - Main Menu", width=50), Colors.green_to_cyan, interval=0.000)
 
     while True:
         Write.Print("1. Generate and Check Tokens", Colors.yellow_to_red, interval=0.000)
