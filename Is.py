@@ -36,7 +36,7 @@ def validate_proxy(proxy):
 # Menu functions
 async def show_menu():
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(Box.DoubleCube("Discord Tool - Main Menu", width=50))
+    print(Box.DoubleCube("Discord Tool - Main Menu"))
     print("\n1. Generate User Tokens\n2. Generate and Validate Nitro Codes\n3. Generate and Validate Proxies\n4. Exit\n")
     choice = Write.Input("Select an option: ", Colors.green_to_blue, interval=0.05)
     return choice
@@ -45,7 +45,7 @@ async def token_gen_checker():
     valid_tokens = []
     invalid_tokens = []
     
-    print(Box.DoubleCube("User Token Generator and Checker", width=50))
+    print(Box.DoubleCube("User Token Generator and Checker"))
     print("\nGenerating tokens, press ENTER to stop...")
 
     while True:
@@ -67,7 +67,7 @@ async def nitro_gen_checker():
     valid_nitros = []
     invalid_nitros = []
 
-    print(Box.DoubleCube("Nitro Code Generator and Checker", width=50))
+    print(Box.DoubleCube("Nitro Code Generator and Checker"))
     print("\nGenerating Nitro codes, press ENTER to stop...")
 
     while True:
@@ -89,7 +89,7 @@ async def proxy_gen_checker():
     valid_proxies = []
     invalid_proxies = []
 
-    print(Box.DoubleCube("Proxy Generator and Checker", width=50))
+    print(Box.DoubleCube("Proxy Generator and Checker"))
     print("\nGenerating proxies, press ENTER to stop...")
 
     while True:
