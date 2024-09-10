@@ -3,7 +3,7 @@ import random
 import string
 import aiohttp
 import os
-from pystyle import Write, Colors, Box
+from pystyle import Write, Colors
 
 # Helper Functions
 def generate_random_token(length=24):
@@ -75,20 +75,31 @@ async def generate_and_check_nitro_codes(session, count):
         Write.Print(f"Generated Nitro Code: {code}", Colors.cyan, interval=0.000)
     return valid_codes, invalid_codes
 
+def print_box(title, content):
+    os.system('cls' if os.name == 'nt' else 'clear')
+    width = 50
+    print(f"+{'-' * (width - 2)}+")
+    print(f"| {title.center(width - 2)} |")
+    print(f"+{'-' * (width - 2)}+")
+    for line in content:
+        print(f"| {line.ljust(width - 2)} |")
+    print(f"+{'-' * (width - 2)}+")
+
 async def display_results(valid_items, invalid_items, valid_label, invalid_label):
     os.system('cls' if os.name == 'nt' else 'clear')
-    Write.Print(Box.Vertical(f"\n{valid_label}\n" + "\n".join(valid_items) if valid_items else "No valid items found."), Colors.green_to_cyan, interval=0.000)
-    Write.Print(Box.Vertical(f"\n{invalid_label}\n" + "\n".join(invalid_items) if invalid_items else "No invalid items found."), Colors.red_to_yellow, interval=0.000)
+    print_box(valid_label, valid_items if valid_items else ["No valid items found."])
+    print_box(invalid_label, invalid_items if invalid_items else ["No invalid items found."])
 
 async def menu():
     os.system('cls' if os.name == 'nt' else 'clear')
-    Write.Print(Box.Vertical("Discord Tool - Main Menu", width=50), Colors.green_to_cyan, interval=0.000)
+    print_box("Discord Tool - Main Menu", [
+        "1. Generate and Check Tokens",
+        "2. Generate and Check Proxies",
+        "3. Generate and Check Nitro Codes",
+        "4. Exit"
+    ])
 
     while True:
-        Write.Print("1. Generate and Check Tokens", Colors.yellow_to_red, interval=0.000)
-        Write.Print("2. Generate and Check Proxies", Colors.yellow_to_red, interval=0.000)
-        Write.Print("3. Generate and Check Nitro Codes", Colors.yellow_to_red, interval=0.000)
-        Write.Print("4. Exit", Colors.yellow_to_red, interval=0.000)
         choice = input("\nChoose an option: ")
 
         if choice == '1':
