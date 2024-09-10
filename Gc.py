@@ -8,17 +8,17 @@ from rich.panel import Panel
 
 console = Console()
 
-# Generate a random Discord User Token
+# Generate a random Discord User Token (for demonstration purposes, this is not valid)
 def generate_user_token():
     token = ''.join(random.choices(string.ascii_letters + string.digits, k=24)) + '.' + ''.join(random.choices(string.ascii_letters + string.digits, k=6)) + '.' + ''.join(random.choices(string.ascii_letters + string.digits, k=27))
     return token
 
-# Generate a random Nitro Code
+# Generate a random Nitro Code (for demonstration purposes, this is not valid)
 def generate_nitro_code():
     code = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
     return f"https://discord.com/gifts/{code}"
 
-# Generate a random Proxy
+# Generate a random Proxy (for demonstration purposes, this is not valid)
 def generate_proxy():
     ip = '.'.join(str(random.randint(0, 255)) for _ in range(4))
     port = random.randint(1000, 9999)
@@ -143,7 +143,11 @@ async def user_token_gen_and_check():
 def main_menu():
     console.print(Panel.fit("Main Menu", style="bold green"))
 
-    options = ["[1] Nitro Generator + Checker", "[2] User Token Generator + Joiner", "[3] Proxy Generator + Checker"]
+    options = [
+        "[1] Nitro Generator + Checker",
+        "[2] User Token Generator + Joiner",
+        "[3] Proxy Generator + Checker"
+    ]
     for option in options:
         console.print(option)
 
