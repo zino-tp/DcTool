@@ -51,7 +51,7 @@ def validate_proxy(proxy):
 
 # Display results
 def display_results(valid_tokens, invalid_tokens, valid_nitro, invalid_nitro, valid_proxies, invalid_proxies):
-    Write.Print(Box.DoubleCube("Results", padding=(1, 1), color=Colors.green_to_cyan), interval=0.000)
+    Write.Print(Box.DoubleCube("Results"), Colors.green_to_cyan, interval=0.000)
     Write.Print(f"Valid Tokens: {len(valid_tokens)}", Colors.green_to_cyan, interval=0.000)
     for token in valid_tokens:
         Write.Print(f"  {token}", Colors.green_to_cyan, interval=0.000)
@@ -70,7 +70,7 @@ def display_results(valid_tokens, invalid_tokens, valid_nitro, invalid_nitro, va
     Write.Print(f"Invalid Proxies: {len(invalid_proxies)}", Colors.red_to_yellow, interval=0.000)
     for proxy in invalid_proxies:
         Write.Print(f"  {proxy}", Colors.red_to_yellow, interval=0.000)
-    Write.Print(Box.DoubleCube("", padding=(1, 1), color=Colors.green_to_cyan), interval=0.000)
+    Write.Print(Box.DoubleCube(""), Colors.green_to_cyan, interval=0.000)
 
 async def generate_and_check():
     valid_tokens = []
@@ -82,7 +82,7 @@ async def generate_and_check():
 
     # Token generation and validation
     Write.Print("Generating and validating tokens...", Colors.green_to_cyan, interval=0.000)
-    for _ in range(10):  # Adjust range for more tokens
+    while True:
         token = generate_token()
         Write.Print(f"Generated Token: {token}", Colors.green_to_cyan, interval=0.000)
         if validate_token(token):
@@ -90,10 +90,12 @@ async def generate_and_check():
         else:
             invalid_tokens.append(token)
         await asyncio.sleep(0.3)
+        if input("Press [ENTER] to stop...") == "":
+            break
 
     # Nitro code generation and validation
     Write.Print("Generating and validating Nitro codes...", Colors.green_to_cyan, interval=0.000)
-    for _ in range(10):  # Adjust range for more codes
+    while True:
         nitro_code = generate_nitro_code()
         Write.Print(f"Generated Nitro Code: {nitro_code}", Colors.green_to_cyan, interval=0.000)
         if validate_nitro_code(nitro_code):
@@ -101,10 +103,12 @@ async def generate_and_check():
         else:
             invalid_nitro.append(nitro_code)
         await asyncio.sleep(0.1)
+        if input("Press [ENTER] to stop...") == "":
+            break
 
     # Proxy generation and validation
     Write.Print("Generating and validating proxies...", Colors.green_to_cyan, interval=0.000)
-    for _ in range(10):  # Adjust range for more proxies
+    while True:
         proxy = generate_proxy()
         Write.Print(f"Generated Proxy: {proxy}", Colors.green_to_cyan, interval=0.000)
         if validate_proxy(proxy):
@@ -112,12 +116,14 @@ async def generate_and_check():
         else:
             invalid_proxies.append(proxy)
         await asyncio.sleep(0.3)
+        if input("Press [ENTER] to stop...") == "":
+            break
 
     # Display results
     display_results(valid_tokens, invalid_tokens, valid_nitro, invalid_nitro, valid_proxies, invalid_proxies)
 
 async def show_menu():
-    Write.Print(Box.DoubleCube("Discord Tool - Main Menu", padding=(1, 1), color=Colors.green_to_cyan), interval=0.000)
+    Write.Print(Box.DoubleCube("Discord Tool - Main Menu"), Colors.green_to_cyan, interval=0.000)
     Write.Print("1. Token Generator & Checker", Colors.green_to_cyan, interval=0.000)
     Write.Print("2. Nitro Code Generator & Checker", Colors.green_to_cyan, interval=0.000)
     Write.Print("3. Proxy Generator & Checker", Colors.green_to_cyan, interval=0.000)
