@@ -75,7 +75,25 @@ async def generate_and_check_nitro_codes(session, count):
         Write.Print(f"Generated Nitro Code: {code}", Colors.cyan, interval=0.000)
     return valid_codes, invalid_codes
 
-async def main():
+async def display_results(valid_items, invalid_items, valid_label, invalid_label):
+    os.system('cls' if os.name == 'nt' else 'clear')
+    Write.Print("╔════════════════════════════════════════════════╗", Colors.green_to_cyan, interval=0.000)
+    Write.Print(f"║          {valid_label}             ║", Colors.green_to_cyan, interval=0.000)
+    Write.Print("╚════════════════════════════════════════════════╝", Colors.green_to_cyan, interval=0.000)
+    if valid_items:
+        Write.Print("\n".join(valid_items), Colors.green, interval=0.000)
+    else:
+        Write.Print("No valid items found.", Colors.red, interval=0.000)
+    
+    Write.Print("\n╔════════════════════════════════════════════╗", Colors.green_to_cyan, interval=0.000)
+    Write.Print(f"║          {invalid_label}           ║", Colors.green_to_cyan, interval=0.000)
+    Write.Print("╚════════════════════════════════════════════╝", Colors.green_to_cyan, interval=0.000)
+    if invalid_items:
+        Write.Print("\n".join(invalid_items), Colors.red, interval=0.000)
+    else:
+        Write.Print("No invalid items found.", Colors.red, interval=0.000)
+
+async def menu():
     os.system('cls' if os.name == 'nt' else 'clear')
     Write.Print("╔════════════════════════════════════════════════╗", Colors.green_to_cyan, interval=0.000)
     Write.Print("║          Discord Tool - Main Menu              ║", Colors.green_to_cyan, interval=0.000)
@@ -93,82 +111,71 @@ async def main():
             Write.Print("Generating tokens... Please wait.", Colors.yellow_to_red, interval=0.000)
             async with aiohttp.ClientSession() as session:
                 valid_tokens, invalid_tokens = await generate_and_check_tokens(session, count)
-            Write.Print(f"Valid Tokens: {len(valid_tokens)}", Colors.green, interval=0.000)
-            Write.Print(f"Invalid Tokens: {len(invalid_tokens)}", Colors.red, interval=0.000)
-            if not valid_tokens:
-                Write.Print("No valid tokens found.", Colors.red, interval=0.000)
-            if not invalid_tokens:
-                Write.Print("No invalid tokens found.", Colors.red, interval=0.000)
-            Write.Print("1. Generate Again", Colors.yellow_to_red, interval=0.000)
-            Write.Print("2. Show Valid Tokens", Colors.yellow_to_red, interval=0.000)
-            Write.Print("3. Show Invalid Tokens", Colors.yellow_to_red, interval=0.000)
-            Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
-            sub_choice = input("Choose an option: ")
-            if sub_choice == '1':
-                continue
-            elif sub_choice == '2':
-                Write.Print("\nValid Tokens:\n" + "\n".join(valid_tokens), Colors.green, interval=0.000)
-            elif sub_choice == '3':
-                Write.Print("\nInvalid Tokens:\n" + "\n".join(invalid_tokens), Colors.red, interval=0.000)
-            elif sub_choice == '4':
-                continue
+            await display_results(valid_tokens, invalid_tokens, "Valid Tokens", "Invalid Tokens")
+            while True:
+                Write.Print("\n1. Generate Again", Colors.yellow_to_red, interval=0.000)
+                Write.Print("2. Show Valid Tokens", Colors.yellow_to_red, interval=0.000)
+                Write.Print("3. Show Invalid Tokens", Colors.yellow_to_red, interval=0.000)
+                Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
+                sub_choice = input("Choose an option: ")
+                if sub_choice == '1':
+                    break
+                elif sub_choice == '2':
+                    await display_results(valid_tokens, [], "Valid Tokens", "No Invalid Tokens")
+                elif sub_choice == '3':
+                    await display_results([], invalid_tokens, "No Valid Tokens", "Invalid Tokens")
+                elif sub_choice == '4':
+                    break
 
         elif choice == '2':
             count = int(input("Enter the number of proxies to generate: "))
             Write.Print("Generating proxies... Please wait.", Colors.yellow_to_red, interval=0.000)
             proxies = await generate_proxies(count)
             valid_proxies, invalid_proxies = await check_proxies(proxies)
-            Write.Print(f"Valid Proxies: {len(valid_proxies)}", Colors.green, interval=0.000)
-            Write.Print(f"Invalid Proxies: {len(invalid_proxies)}", Colors.red, interval=0.000)
-            if not valid_proxies:
-                Write.Print("No valid proxies found.", Colors.red, interval=0.000)
-            if not invalid_proxies:
-                Write.Print("No invalid proxies found.", Colors.red, interval=0.000)
-            Write.Print("1. Generate Again", Colors.yellow_to_red, interval=0.000)
-            Write.Print("2. Show Valid Proxies", Colors.yellow_to_red, interval=0.000)
-            Write.Print("3. Show Invalid Proxies", Colors.yellow_to_red, interval=0.000)
-            Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
-            sub_choice = input("Choose an option: ")
-            if sub_choice == '1':
-                continue
-            elif sub_choice == '2':
-                Write.Print("\nValid Proxies:\n" + "\n".join(valid_proxies), Colors.green, interval=0.000)
-            elif sub_choice == '3':
-                Write.Print("\nInvalid Proxies:\n" + "\n".join(invalid_proxies), Colors.red, interval=0.000)
-            elif sub_choice == '4':
-                continue
+            await display_results(valid_proxies, invalid_proxies, "Valid Proxies", "Invalid Proxies")
+            while True:
+                Write.Print("\n1. Generate Again", Colors.yellow_to_red, interval=0.000)
+                Write.Print("2. Show Valid Proxies", Colors.yellow_to_red, interval=0.000)
+                Write.Print("3. Show Invalid Proxies", Colors.yellow_to_red, interval=0.000)
+                Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
+                sub_choice = input("Choose an option: ")
+                if sub_choice == '1':
+                    break
+                elif sub_choice == '2':
+                    await display_results(valid_proxies, [], "Valid Proxies", "No Invalid Proxies")
+                elif sub_choice == '3':
+                    await display_results([], invalid_proxies, "No Valid Proxies", "Invalid Proxies")
+                elif sub_choice == '4':
+                    break
 
         elif choice == '3':
             count = int(input("Enter the number of Nitro codes to generate: "))
             Write.Print("Generating Nitro codes... Please wait.", Colors.yellow_to_red, interval=0.000)
             async with aiohttp.ClientSession() as session:
                 valid_codes, invalid_codes = await generate_and_check_nitro_codes(session, count)
-            Write.Print(f"Valid Nitro Codes: {len(valid_codes)}", Colors.green, interval=0.000)
-            Write.Print(f"Invalid Nitro Codes: {len(invalid_codes)}", Colors.red, interval=0.000)
-            if not valid_codes:
-                Write.Print("No valid Nitro codes found.", Colors.red, interval=0.000)
-            if not invalid_codes:
-                Write.Print("No invalid Nitro codes found.", Colors.red, interval=0.000)
-            Write.Print("1. Generate Again", Colors.yellow_to_red, interval=0.000)
-            Write.Print("2. Show Valid Nitro Codes", Colors.yellow_to_red, interval=0.000)
-            Write.Print("3. Show Invalid Nitro Codes", Colors.yellow_to_red, interval=0.000)
-            Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
-            sub_choice = input("Choose an option: ")
-            if sub_choice == '1':
-                continue
-            elif sub_choice == '2':
-                Write.Print("\nValid Nitro Codes:\n" + "\n".join(valid_codes), Colors.green, interval=0.000)
-            elif sub_choice == '3':
-                Write.Print("\nInvalid Nitro Codes:\n" + "\n".join(invalid_codes), Colors.red, interval=0.000)
-            elif sub_choice == '4':
-                continue
+            await display_results(valid_codes, invalid_codes, "Valid Nitro Codes", "Invalid Nitro Codes")
+            while True:
+                Write.Print("\n1. Generate Again", Colors.yellow_to_red, interval=0.000)
+                Write.Print("2. Show Valid Nitro Codes", Colors.yellow_to_red, interval=0.000)
+                Write.Print("3. Show Invalid Nitro Codes", Colors.yellow_to_red, interval=0.000)
+                Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
+                sub_choice = input("Choose an option: ")
+                if sub_choice == '1':
+                    break
+                elif sub_choice == '2':
+                    await display_results(valid_codes, [], "Valid Nitro Codes", "No Invalid Nitro Codes")
+                elif sub_choice == '3':
+                    await display_results([], invalid_codes, "No Valid Nitro Codes", "Invalid Nitro Codes")
+                elif sub_choice == '4':
+                    break
 
         elif choice == '4':
-            Write.Print("Exiting...", Colors.red_to_yellow, interval=0.000)
-            break
+            Write.Print("Returning to Main Menu...", Colors.red_to_yellow, interval=0.000)
+            await asyncio.sleep(1)
+            continue
 
         else:
             Write.Print("Invalid choice. Please try again.", Colors.red_to_yellow, interval=0.000)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(menu())
