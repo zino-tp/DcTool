@@ -68,7 +68,7 @@ def non_blocking_input(prompt):
     while True:
         if select.select([sys.stdin], [], [], 0.0)[0]:
             return sys.stdin.readline().strip()
-        await asyncio.sleep(0.1)
+        asyncio.run(asyncio.sleep(0.1))
 
 # Asynchronous token generation and validation
 async def generate_tokens():
