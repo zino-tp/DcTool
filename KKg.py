@@ -2,11 +2,9 @@ import asyncio
 import random
 import string
 import requests
-from pystyle import Write, Colors, Box
 
 # API URLs
 DISCORD_API = 'https://discord.com/api/v9'
-DISCORD_INVITE_URL = f'{DISCORD_API}/invites/'
 DISCORD_TOKEN_VALIDATE_URL = f'{DISCORD_API}/users/@me'
 
 # Async function to generate random Discord tokens
@@ -41,12 +39,14 @@ def check_proxy(proxy):
 
 # Function to display menu
 async def show_menu():
-    Write.Print(Box.DoubleLine("Discord Tool - Main Menu", width=50), Colors.green_to_cyan, interval=0.000)
-    Write.Print("1. Generate User Tokens", Colors.green_to_cyan, interval=0.000)
-    Write.Print("2. Generate Nitro Codes", Colors.green_to_cyan, interval=0.000)
-    Write.Print("3. Generate Proxies", Colors.green_to_cyan, interval=0.000)
-    Write.Print("4. Exit", Colors.green_to_cyan, interval=0.000)
-    choice = Write.Input("Select an option: ", Colors.green_to_cyan, interval=0.000)
+    print("===================================")
+    print("Discord Tool - Main Menu")
+    print("===================================")
+    print("1. Generate User Tokens")
+    print("2. Generate Nitro Codes")
+    print("3. Generate Proxies")
+    print("4. Exit")
+    choice = input("Select an option: ")
     return choice
 
 # Function to handle user token generation and checking
@@ -58,15 +58,15 @@ async def generate_user_tokens():
         tokens.append(token)
         valid = check_token(token)
         status = "Valid" if valid else "Invalid"
-        Write.Print(f"Token: {token} - {status}", Colors.green_to_cyan if valid else Colors.red_to_yellow, interval=0.01)
+        print(f"Token: {token} - {status}")
         await asyncio.sleep(0.1)  # Adjust speed here
 
-        if Write.Input("\nPress [ ENTER ] to stop generating, or any other key to continue...", Colors.green_to_cyan, interval=0.000):
+        if input("\nPress [ ENTER ] to stop generating, or any other key to continue..."):
             break
 
-    Write.Print(f"\nValid Tokens ({len(valid_tokens)}):", Colors.green_to_cyan, interval=0.000)
+    print(f"\nValid Tokens ({len(valid_tokens)}):")
     for token in valid_tokens:
-        Write.Print(token, Colors.green_to_cyan, interval=0.000)
+        print(token)
 
 # Function to handle Nitro code generation and checking
 async def generate_nitro_codes():
@@ -77,15 +77,15 @@ async def generate_nitro_codes():
         codes.append(code)
         valid = check_nitro_code(code)
         status = "Valid" if valid else "Invalid"
-        Write.Print(f"Nitro Code: {code} - {status}", Colors.green_to_cyan if valid else Colors.red_to_yellow, interval=0.01)
+        print(f"Nitro Code: {code} - {status}")
         await asyncio.sleep(0.1)  # Adjust speed here
 
-        if Write.Input("\nPress [ ENTER ] to stop generating, or any other key to continue...", Colors.green_to_cyan, interval=0.000):
+        if input("\nPress [ ENTER ] to stop generating, or any other key to continue..."):
             break
 
-    Write.Print(f"\nValid Nitro Codes ({len(valid_codes)}):", Colors.green_to_cyan, interval=0.000)
+    print(f"\nValid Nitro Codes ({len(valid_codes)}):")
     for code in valid_codes:
-        Write.Print(code, Colors.green_to_cyan, interval=0.000)
+        print(code)
 
 # Function to handle proxy generation and checking
 async def generate_proxies():
@@ -96,15 +96,15 @@ async def generate_proxies():
         proxies.append(proxy)
         valid = check_proxy(proxy)
         status = "Valid" if valid else "Invalid"
-        Write.Print(f"Proxy: {proxy} - {status}", Colors.green_to_cyan if valid else Colors.red_to_yellow, interval=0.01)
+        print(f"Proxy: {proxy} - {status}")
         await asyncio.sleep(0.1)  # Adjust speed here
 
-        if Write.Input("\nPress [ ENTER ] to stop generating, or any other key to continue...", Colors.green_to_cyan, interval=0.000):
+        if input("\nPress [ ENTER ] to stop generating, or any other key to continue..."):
             break
 
-    Write.Print(f"\nValid Proxies ({len(valid_proxies)}):", Colors.green_to_cyan, interval=0.000)
+    print(f"\nValid Proxies ({len(valid_proxies)}):")
     for proxy in valid_proxies:
-        Write.Print(proxy, Colors.green_to_cyan, interval=0.000)
+        print(proxy)
 
 # Main function
 async def main():
@@ -117,10 +117,10 @@ async def main():
         elif choice == '3':
             await generate_proxies()
         elif choice == '4':
-            Write.Print("Exiting...", Colors.red_to_yellow, interval=0.000)
+            print("Exiting...")
             break
         else:
-            Write.Print("Invalid choice, please try again.", Colors.red_to_yellow, interval=0.000)
+            print("Invalid choice, please try again.")
 
 if __name__ == '__main__':
     asyncio.run(main())
