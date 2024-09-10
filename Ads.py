@@ -2,13 +2,12 @@ import asyncio
 import requests
 import random
 import string
-import time
 
 # Constants
 DISCORD_API_URL = 'https://discord.com/api/v10'
 VALIDATION_TIMEOUT = 10  # seconds
 
-# Generate random tokens, nitro codes, and proxies
+# Generate random Discord-like tokens
 def generate_token():
     return ''.join(random.choices(string.ascii_letters + string.digits + '._-', k=59))
 
@@ -18,7 +17,7 @@ def generate_nitro_code():
 def generate_proxy():
     return f"http://{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}:{random.randint(1024, 65535)}"
 
-# Validate tokens, nitro codes, and proxies
+# Validate tokens
 def validate_token(token):
     url = f'{DISCORD_API_URL}/users/@me'
     headers = {
@@ -60,6 +59,7 @@ def display_results(valid, invalid, label):
     for item in invalid:
         print(f"  {item}")
 
+# Asynchronous token generation and validation
 async def generate_tokens():
     valid_tokens = []
     invalid_tokens = []
@@ -69,13 +69,16 @@ async def generate_tokens():
         print(f"Generated Token: {token}")
         if validate_token(token):
             valid_tokens.append(token)
+            print(f"Valid Token: {token}")
         else:
             invalid_tokens.append(token)
-        await asyncio.sleep(0.3)
+            print(f"Invalid Token: {token}")
+        await asyncio.sleep(0.2)
         if input() == "":
             break
     display_results(valid_tokens, invalid_tokens, "Tokens")
 
+# Asynchronous Nitro code generation and validation
 async def generate_nitro_codes():
     valid_nitro = []
     invalid_nitro = []
@@ -85,13 +88,16 @@ async def generate_nitro_codes():
         print(f"Generated Nitro Code: {nitro_code}")
         if validate_nitro_code(nitro_code):
             valid_nitro.append(nitro_code)
+            print(f"Valid Nitro Code: {nitro_code}")
         else:
             invalid_nitro.append(nitro_code)
-        await asyncio.sleep(0.1)
+            print(f"Invalid Nitro Code: {nitro_code}")
+        await asyncio.sleep(0.2)
         if input() == "":
             break
     display_results(valid_nitro, invalid_nitro, "Nitro Codes")
 
+# Asynchronous Proxy generation and validation
 async def generate_proxies():
     valid_proxies = []
     invalid_proxies = []
@@ -101,13 +107,16 @@ async def generate_proxies():
         print(f"Generated Proxy: {proxy}")
         if validate_proxy(proxy):
             valid_proxies.append(proxy)
+            print(f"Valid Proxy: {proxy}")
         else:
             invalid_proxies.append(proxy)
-        await asyncio.sleep(0.3)
+            print(f"Invalid Proxy: {proxy}")
+        await asyncio.sleep(0.2)
         if input() == "":
             break
     display_results(valid_proxies, invalid_proxies, "Proxies")
 
+# Show menu
 async def show_menu():
     print("\nDiscord Tool - Main Menu")
     print("1. Token Generator & Checker")
@@ -117,6 +126,7 @@ async def show_menu():
     choice = input("Select an option: ")
     return choice
 
+# Main function
 async def main():
     while True:
         choice = await show_menu()
