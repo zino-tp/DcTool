@@ -5,7 +5,6 @@ import string
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.panel import Panel
-from time import sleep
 
 console = Console()
 
@@ -69,13 +68,13 @@ async def proxy_gen_and_check():
 
     results = await asyncio.gather(*tasks)
 
-    for result in results:
+    for result, proxy in zip(results, tasks):
         if result:
             valids += 1
-            console.print(f"[green]Valid Proxy: {proxy}")
+            console.print(f"[green]Valid Proxy: {proxy.result()}")
         else:
             invalids += 1
-            console.print(f"[red]Invalid Proxy: {proxy}")
+            console.print(f"[red]Invalid Proxy: {proxy.result()}")
 
     console.print(f"[cyan]Proxy Generation Completed! Valid: {valids}, Invalid: {invalids}")
 
@@ -93,14 +92,14 @@ async def nitro_gen_and_check():
 
         results = await asyncio.gather(*tasks)
 
-        for result in results:
+        for result, code in zip(results, tasks):
             if result:
                 valids += 1
-                console.print(f"[green]Valid Nitro Code: {code}")
+                console.print(f"[green]Valid Nitro Code: {code.result()}")
                 # Send valid code to webhook
-                await session.post(webhook_url, json={"content": f"Valid Nitro Code: {code}"})
+                await session.post(webhook_url, json={"content": f"Valid Nitro Code: {code.result()}"})
             else:
-                console.print(f"[red]Invalid Nitro Code: {code}")
+                console.print(f"[red]Invalid Nitro Code: {code.result()}")
 
     console.print(f"[cyan]Nitro Generation Completed! Valid Codes: {valids}")
 
@@ -118,13 +117,13 @@ async def user_token_gen_and_check():
 
     results = await asyncio.gather(*tasks)
 
-    for result in results:
+    for result, token in zip(results, tasks):
         if result:
             valids += 1
-            console.print(f"[green]Valid Token Joined Server: {token}")
+            console.print(f"[green]Valid Token Joined Server: {token.result()}")
         else:
             invalids += 1
-            console.print(f"[red]Invalid Token: {token}")
+            console.print(f"[red]Invalid Token: {token.result()}")
 
     console.print(f"[cyan]User Token Generation Completed! Valid: {valids}, Invalid: {invalids}")
 
@@ -148,5 +147,5 @@ def main_menu():
         console.print("[red]Invalid choice, please try again.[/]")
 
 if __name__ == "__main__":
-    banner()
     main_menu()
+m
