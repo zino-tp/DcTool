@@ -77,7 +77,9 @@ async def generate_and_check_nitro_codes(session, count):
 
 async def main():
     os.system('cls' if os.name == 'nt' else 'clear')
-    Write.Print("Discord Token and Nitro Code Generator", Colors.green_to_cyan, interval=0.000)
+    Write.Print("╔════════════════════════════════════════════════╗", Colors.green_to_cyan, interval=0.000)
+    Write.Print("║          Discord Tool - Main Menu              ║", Colors.green_to_cyan, interval=0.000)
+    Write.Print("╚════════════════════════════════════════════════╝", Colors.green_to_cyan, interval=0.000)
 
     while True:
         Write.Print("1. Generate and Check Tokens", Colors.yellow_to_red, interval=0.000)
@@ -93,6 +95,10 @@ async def main():
                 valid_tokens, invalid_tokens = await generate_and_check_tokens(session, count)
             Write.Print(f"Valid Tokens: {len(valid_tokens)}", Colors.green, interval=0.000)
             Write.Print(f"Invalid Tokens: {len(invalid_tokens)}", Colors.red, interval=0.000)
+            if not valid_tokens:
+                Write.Print("No valid tokens found.", Colors.red, interval=0.000)
+            if not invalid_tokens:
+                Write.Print("No invalid tokens found.", Colors.red, interval=0.000)
             Write.Print("1. Generate Again", Colors.yellow_to_red, interval=0.000)
             Write.Print("2. Show Valid Tokens", Colors.yellow_to_red, interval=0.000)
             Write.Print("3. Show Invalid Tokens", Colors.yellow_to_red, interval=0.000)
@@ -114,6 +120,10 @@ async def main():
             valid_proxies, invalid_proxies = await check_proxies(proxies)
             Write.Print(f"Valid Proxies: {len(valid_proxies)}", Colors.green, interval=0.000)
             Write.Print(f"Invalid Proxies: {len(invalid_proxies)}", Colors.red, interval=0.000)
+            if not valid_proxies:
+                Write.Print("No valid proxies found.", Colors.red, interval=0.000)
+            if not invalid_proxies:
+                Write.Print("No invalid proxies found.", Colors.red, interval=0.000)
             Write.Print("1. Generate Again", Colors.yellow_to_red, interval=0.000)
             Write.Print("2. Show Valid Proxies", Colors.yellow_to_red, interval=0.000)
             Write.Print("3. Show Invalid Proxies", Colors.yellow_to_red, interval=0.000)
@@ -135,6 +145,10 @@ async def main():
                 valid_codes, invalid_codes = await generate_and_check_nitro_codes(session, count)
             Write.Print(f"Valid Nitro Codes: {len(valid_codes)}", Colors.green, interval=0.000)
             Write.Print(f"Invalid Nitro Codes: {len(invalid_codes)}", Colors.red, interval=0.000)
+            if not valid_codes:
+                Write.Print("No valid Nitro codes found.", Colors.red, interval=0.000)
+            if not invalid_codes:
+                Write.Print("No invalid Nitro codes found.", Colors.red, interval=0.000)
             Write.Print("1. Generate Again", Colors.yellow_to_red, interval=0.000)
             Write.Print("2. Show Valid Nitro Codes", Colors.yellow_to_red, interval=0.000)
             Write.Print("3. Show Invalid Nitro Codes", Colors.yellow_to_red, interval=0.000)
