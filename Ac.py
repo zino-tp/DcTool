@@ -77,34 +77,19 @@ async def generate_and_check_nitro_codes(session, count):
 
 async def display_results(valid_items, invalid_items, valid_label, invalid_label):
     os.system('cls' if os.name == 'nt' else 'clear')
-    Write.Print("╔════════════════════════════════════════════════╗", Colors.green_to_cyan, interval=0.000)
-    Write.Print(f"║          {valid_label}             ║", Colors.green_to_cyan, interval=0.000)
-    Write.Print("╚════════════════════════════════════════════════╝", Colors.green_to_cyan, interval=0.000)
-    if valid_items:
-        Write.Print("\n".join(valid_items), Colors.green, interval=0.000)
-    else:
-        Write.Print("No valid items found.", Colors.red, interval=0.000)
-    
-    Write.Print("\n╔════════════════════════════════════════════╗", Colors.green_to_cyan, interval=0.000)
-    Write.Print(f"║          {invalid_label}           ║", Colors.green_to_cyan, interval=0.000)
-    Write.Print("╚════════════════════════════════════════════╝", Colors.green_to_cyan, interval=0.000)
-    if invalid_items:
-        Write.Print("\n".join(invalid_items), Colors.red, interval=0.000)
-    else:
-        Write.Print("No invalid items found.", Colors.red, interval=0.000)
+    Write.Print(Box.DoubleLine(f"\n{valid_label}\n" + "\n".join(valid_items) if valid_items else "No valid items found.", width=50), Colors.green_to_cyan, interval=0.000)
+    Write.Print(Box.DoubleLine(f"\n{invalid_label}\n" + "\n".join(invalid_items) if invalid_items else "No invalid items found.", width=50), Colors.red_to_yellow, interval=0.000)
 
 async def menu():
     os.system('cls' if os.name == 'nt' else 'clear')
-    Write.Print("╔════════════════════════════════════════════════╗", Colors.green_to_cyan, interval=0.000)
-    Write.Print("║          Discord Tool - Main Menu              ║", Colors.green_to_cyan, interval=0.000)
-    Write.Print("╚════════════════════════════════════════════════╝", Colors.green_to_cyan, interval=0.000)
+    Write.Print(Box.DoubleLine("Discord Tool - Main Menu", width=50), Colors.green_to_cyan, interval=0.000)
 
     while True:
         Write.Print("1. Generate and Check Tokens", Colors.yellow_to_red, interval=0.000)
         Write.Print("2. Generate and Check Proxies", Colors.yellow_to_red, interval=0.000)
         Write.Print("3. Generate and Check Nitro Codes", Colors.yellow_to_red, interval=0.000)
         Write.Print("4. Exit", Colors.yellow_to_red, interval=0.000)
-        choice = input("Choose an option: ")
+        choice = input("\nChoose an option: ")
 
         if choice == '1':
             count = int(input("Enter the number of tokens to generate: "))
@@ -117,7 +102,7 @@ async def menu():
                 Write.Print("2. Show Valid Tokens", Colors.yellow_to_red, interval=0.000)
                 Write.Print("3. Show Invalid Tokens", Colors.yellow_to_red, interval=0.000)
                 Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
-                sub_choice = input("Choose an option: ")
+                sub_choice = input("\nChoose an option: ")
                 if sub_choice == '1':
                     break
                 elif sub_choice == '2':
@@ -138,7 +123,7 @@ async def menu():
                 Write.Print("2. Show Valid Proxies", Colors.yellow_to_red, interval=0.000)
                 Write.Print("3. Show Invalid Proxies", Colors.yellow_to_red, interval=0.000)
                 Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
-                sub_choice = input("Choose an option: ")
+                sub_choice = input("\nChoose an option: ")
                 if sub_choice == '1':
                     break
                 elif sub_choice == '2':
@@ -159,7 +144,7 @@ async def menu():
                 Write.Print("2. Show Valid Nitro Codes", Colors.yellow_to_red, interval=0.000)
                 Write.Print("3. Show Invalid Nitro Codes", Colors.yellow_to_red, interval=0.000)
                 Write.Print("4. Go Back", Colors.yellow_to_red, interval=0.000)
-                sub_choice = input("Choose an option: ")
+                sub_choice = input("\nChoose an option: ")
                 if sub_choice == '1':
                     break
                 elif sub_choice == '2':
