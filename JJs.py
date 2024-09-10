@@ -51,7 +51,7 @@ def validate_proxy(proxy):
 
 # Display results
 def display_results(valid_tokens, invalid_tokens, valid_nitro, invalid_nitro, valid_proxies, invalid_proxies):
-    Write.Print(Box.DoubleCube("Results", width=50), Colors.green_to_cyan, interval=0.000)
+    Write.Print(Box.DoubleCube("Results", padding=(1, 1), color=Colors.green_to_cyan), interval=0.000)
     Write.Print(f"Valid Tokens: {len(valid_tokens)}", Colors.green_to_cyan, interval=0.000)
     for token in valid_tokens:
         Write.Print(f"  {token}", Colors.green_to_cyan, interval=0.000)
@@ -70,7 +70,7 @@ def display_results(valid_tokens, invalid_tokens, valid_nitro, invalid_nitro, va
     Write.Print(f"Invalid Proxies: {len(invalid_proxies)}", Colors.red_to_yellow, interval=0.000)
     for proxy in invalid_proxies:
         Write.Print(f"  {proxy}", Colors.red_to_yellow, interval=0.000)
-    Write.Print(Box.DoubleCube("", width=50), Colors.green_to_cyan, interval=0.000)
+    Write.Print(Box.DoubleCube("", padding=(1, 1), color=Colors.green_to_cyan), interval=0.000)
 
 async def generate_and_check():
     valid_tokens = []
@@ -117,7 +117,7 @@ async def generate_and_check():
     display_results(valid_tokens, invalid_tokens, valid_nitro, invalid_nitro, valid_proxies, invalid_proxies)
 
 async def show_menu():
-    Write.Print(Box.DoubleCube("Discord Tool - Main Menu", width=50), Colors.green_to_cyan, interval=0.000)
+    Write.Print(Box.DoubleCube("Discord Tool - Main Menu", padding=(1, 1), color=Colors.green_to_cyan), interval=0.000)
     Write.Print("1. Token Generator & Checker", Colors.green_to_cyan, interval=0.000)
     Write.Print("2. Nitro Code Generator & Checker", Colors.green_to_cyan, interval=0.000)
     Write.Print("3. Proxy Generator & Checker", Colors.green_to_cyan, interval=0.000)
