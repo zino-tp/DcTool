@@ -48,20 +48,20 @@ async def token_gen_checker():
     print(Box.DoubleCube("User Token Generator and Checker"))
     print("\nGenerating tokens, press ENTER to stop...")
 
-    while True:
-        token = generate_user_token()
-        is_valid = validate_token(token)
-        if is_valid:
-            valid_tokens.append(token)
-        else:
-            invalid_tokens.append(token)
-        print(f"Generated Token: {token} {'[Valid]' if is_valid else '[Invalid]'}")
-        time.sleep(0.3)  # Speed control, 0.3 seconds delay
-        if input() == '':
-            break
-
-    print(f"\nGeneration stopped. {len(valid_tokens)} valid tokens, {len(invalid_tokens)} invalid tokens.")
-    await show_results(valid_tokens, invalid_tokens)
+    try:
+        while True:
+            for _ in range(2):  # Generate two tokens per iteration
+                token = generate_user_token()
+                is_valid = validate_token(token)
+                if is_valid:
+                    valid_tokens.append(token)
+                else:
+                    invalid_tokens.append(token)
+                print(f"Generated Token: {token} {'[Valid]' if is_valid else '[Invalid]'}")
+            time.sleep(0.3)  # Speed control, 0.3 seconds delay
+    except KeyboardInterrupt:
+        print(f"\nGeneration stopped. {len(valid_tokens)} valid tokens, {len(invalid_tokens)} invalid tokens.")
+        await show_results(valid_tokens, invalid_tokens)
 
 async def nitro_gen_checker():
     valid_nitros = []
@@ -70,20 +70,20 @@ async def nitro_gen_checker():
     print(Box.DoubleCube("Nitro Code Generator and Checker"))
     print("\nGenerating Nitro codes, press ENTER to stop...")
 
-    while True:
-        nitro = generate_nitro_code()
-        is_valid = validate_nitro_code(nitro)
-        if is_valid:
-            valid_nitros.append(nitro)
-        else:
-            invalid_nitros.append(nitro)
-        print(f"Generated Nitro Code: {nitro} {'[Valid]' if is_valid else '[Invalid]'}")
-        time.sleep(0.1)  # Speed control, 0.1 seconds delay
-        if input() == '':
-            break
-
-    print(f"\nGeneration stopped. {len(valid_nitros)} valid Nitro codes, {len(invalid_nitros)} invalid Nitro codes.")
-    await show_results(valid_nitros, invalid_nitros)
+    try:
+        while True:
+            for _ in range(2):  # Generate two nitros per iteration
+                nitro = generate_nitro_code()
+                is_valid = validate_nitro_code(nitro)
+                if is_valid:
+                    valid_nitros.append(nitro)
+                else:
+                    invalid_nitros.append(nitro)
+                print(f"Generated Nitro Code: {nitro} {'[Valid]' if is_valid else '[Invalid]'}")
+            time.sleep(0.1)  # Speed control, 0.1 seconds delay
+    except KeyboardInterrupt:
+        print(f"\nGeneration stopped. {len(valid_nitros)} valid Nitro codes, {len(invalid_nitros)} invalid Nitro codes.")
+        await show_results(valid_nitros, invalid_nitros)
 
 async def proxy_gen_checker():
     valid_proxies = []
@@ -92,20 +92,20 @@ async def proxy_gen_checker():
     print(Box.DoubleCube("Proxy Generator and Checker"))
     print("\nGenerating proxies, press ENTER to stop...")
 
-    while True:
-        proxy = generate_proxy()
-        is_valid = validate_proxy(proxy)
-        if is_valid:
-            valid_proxies.append(proxy)
-        else:
-            invalid_proxies.append(proxy)
-        print(f"Generated Proxy: {proxy} {'[Valid]' if is_valid else '[Invalid]'}")
-        time.sleep(0.2)  # Speed control, 0.2 seconds delay
-        if input() == '':
-            break
-
-    print(f"\nGeneration stopped. {len(valid_proxies)} valid proxies, {len(invalid_proxies)} invalid proxies.")
-    await show_results(valid_proxies, invalid_proxies)
+    try:
+        while True:
+            for _ in range(2):  # Generate two proxies per iteration
+                proxy = generate_proxy()
+                is_valid = validate_proxy(proxy)
+                if is_valid:
+                    valid_proxies.append(proxy)
+                else:
+                    invalid_proxies.append(proxy)
+                print(f"Generated Proxy: {proxy} {'[Valid]' if is_valid else '[Invalid]'}")
+            time.sleep(0.2)  # Speed control, 0.2 seconds delay
+    except KeyboardInterrupt:
+        print(f"\nGeneration stopped. {len(valid_proxies)} valid proxies, {len(invalid_proxies)} invalid proxies.")
+        await show_results(valid_proxies, invalid_proxies)
 
 async def show_results(valid_list, invalid_list):
     print("\n1. Show Valid Results\n2. Show Invalid Results\n3. Go Back to Menu")
